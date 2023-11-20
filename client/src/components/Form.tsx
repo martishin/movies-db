@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
-import Input from "./components/Input.tsx"
+import Input from "./Input.tsx"
 
-interface AppProps {
+interface FormProps {
   title: string
 }
 
@@ -12,7 +12,7 @@ interface Person {
   dob: string
 }
 
-function App({ title }: AppProps) {
+function Form({ title }: FormProps) {
   const [isTrue, setIsTrue] = useState(true)
   const [crowd, setCrowd] = useState<Person[]>([])
   const [firstName, setFirstName] = useState("")
@@ -29,8 +29,6 @@ function App({ title }: AppProps) {
   }
 
   useEffect(() => {
-    console.log("useEffect fired!")
-
     const people: Person[] = [
       {
         id: 1,
@@ -178,4 +176,4 @@ function App({ title }: AppProps) {
   )
 }
 
-export default App
+export default Form
