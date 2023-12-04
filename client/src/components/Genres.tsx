@@ -1,4 +1,6 @@
-export default function Genres() {
+import { ReactNode } from "react"
+
+export default function Genres(): ReactNode {
   return (
     <>
       <div className="text-center">

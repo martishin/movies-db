@@ -11,10 +11,7 @@ interface InputProps {
 const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return (
     <div className="mb-6">
-      <label
-        htmlFor={props.name}
-        className="text-left block mb-2 text-l font-medium text-gray-900"
-      >
+      <label htmlFor={props.name} className="text-l mb-2 block text-left font-medium text-gray-900">
         {props.title}
       </label>
       <input
@@ -22,8 +19,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         name={props.name}
         id={props.name}
         autoComplete={props.autoComplete}
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-          focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5
+          text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
         onChange={props.onChange}
         ref={ref}
       ></input>

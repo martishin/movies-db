@@ -1,4 +1,6 @@
-export default function Login() {
+import { ReactNode } from "react"
+
+export default function Login(): ReactNode {
   return (
     <>
       <div className="text-center">

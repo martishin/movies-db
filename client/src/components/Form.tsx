@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { ReactNode, useEffect, useRef, useState } from "react"
+
 import Input from "./Input.tsx"
 
 interface FormProps {
@@ -12,7 +13,7 @@ interface Person {
   dob: string
 }
 
-function Form({ title }: FormProps) {
+function Form({ title }: FormProps): ReactNode {
   const [isTrue, setIsTrue] = useState(true)
   const [crowd, setCrowd] = useState<Person[]>([])
   const [firstName, setFirstName] = useState("")
@@ -54,11 +55,7 @@ function Form({ title }: FormProps) {
     }
   }
 
-  const addPerson = (
-    newFirstName: string,
-    newLastName: string,
-    newDOB: string,
-  ) => {
+  const addPerson = (newFirstName: string, newLastName: string, newDOB: string) => {
     const newPerson: Person = {
       id: crowd.length + 1,
       firstName: newFirstName,
@@ -103,16 +100,15 @@ function Form({ title }: FormProps) {
       <hr />
       <a
         href="#!"
-        className="mb-2 me-2 mt-2 inline-block rounded-lg bg-blue-700 px-5 py-2.5 text-sm
-          font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4
-          focus:ring-blue-300"
+        className="mb-2 me-2 mt-2 inline-block rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white
+          hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
         onClick={toggleTrue}
       >
         Toggle isTrue
       </a>
       <hr />
       <h3>People</h3>
-      <ul className="space-y-1 list-disc list-inside">
+      <ul className="list-inside list-disc space-y-1">
         {crowd.map((p) => (
           <li key={p.id}>
             {p.firstName} {p.lastName}
@@ -120,7 +116,7 @@ function Form({ title }: FormProps) {
         ))}
       </ul>
       <form autoComplete="off" onSubmit={handleSubmit}>
-        <div className="mt-6 w-80 ml-auto mr-auto">
+        <div className="ml-auto mr-auto mt-6 w-80">
           <Input
             title="First Name"
             type="text"
@@ -147,19 +143,16 @@ function Form({ title }: FormProps) {
             type="date"
             name="dob"
             autoComplete="dob-new"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setDob(event.target.value)
-            }
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setDob(event.target.value)}
             ref={dobRef}
           />
 
-          <div className="mb-6 w-full inline-block">
+          <div className="mb-6 inline-block w-full">
             <input
               type="submit"
               value="Submit"
-              className="mb-2 me-2 mt-2 inline-block rounded-lg bg-blue-700 px-5 py-2.5 text-sm
-                font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4
-                focus:ring-blue-300 float-left"
+              className="float-left mb-2 me-2 mt-2 inline-block rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium
+                text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
             ></input>
           </div>
         </div>

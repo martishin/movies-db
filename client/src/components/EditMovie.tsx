@@ -1,4 +1,6 @@
-export default function EditMovie() {
+import { ReactNode } from "react"
+
+export default function EditMovie(): ReactNode {
   return (
     <>
       <div className="text-center">

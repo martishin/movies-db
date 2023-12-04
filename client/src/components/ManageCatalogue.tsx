@@ -1,4 +1,6 @@
-export default function ManageCatalogue() {
+import { ReactNode } from "react"
+
+export default function ManageCatalogue(): ReactNode {
   return (
     <>
       <div className="text-center">

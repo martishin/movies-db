@@ -1,4 +1,6 @@
-export default function GraphQL() {
+import { ReactNode } from "react"
+
+export default function GraphQL(): ReactNode {
   return (
     <>
       <div className="text-center">

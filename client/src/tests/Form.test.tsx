@@ -9,16 +9,12 @@ describe("Form component", () => {
 
   test("initially shows isTrue is true", () => {
     render(<Form title="Test Title" />)
-    expect(
-      screen.getByText("The current value of isTrue is true"),
-    ).toBeInTheDocument()
+    expect(screen.getByText("The current value of isTrue is true")).toBeInTheDocument()
   })
 
   test("changes the value of isTrue on button click", () => {
     render(<Form title="Test Title" />)
     fireEvent.click(screen.getByText("Toggle isTrue"))
-    expect(
-      screen.getByText("The current value of isTrue is false"),
-    ).toBeInTheDocument()
+    expect(screen.getByText("The current value of isTrue is false")).toBeInTheDocument()
   })
 })

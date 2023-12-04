@@ -1,7 +1,9 @@
-import ticketLogo from "./../assets/movie_tickets.jpg"
+import { ReactNode } from "react"
 import { Link } from "react-router-dom"
 
-export default function Home() {
+import ticketLogo from "./../assets/movie_tickets.jpg"
+
+export default function Home(): ReactNode {
   return (
     <>
       <div className="text-center">
