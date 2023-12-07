@@ -1,19 +1,30 @@
 import { NavLink } from "react-router-dom"
 
-export default function Navigation() {
+interface NavigationProps {
+  jwtToken: string
+}
+
+export default function Navigation({ jwtToken }: NavigationProps) {
+  const commonLinks = [
+    ["Home", "/"],
+    ["Movies", "/movies"],
+    ["Genres", "/genres"],
+  ]
+
+  const loggedInLinks = [
+    ["Add a movie", "/admin/movie/0"],
+    ["Manage Catalogue", "/manage-catalogue"],
+    ["GraphQL", "/graphql"],
+  ]
+
+  const links = jwtToken !== "" ? [...commonLinks, ...loggedInLinks] : commonLinks
+
   return (
     <div className="ml-4 mr-4">
       <nav aria-label="Main navigation">
         <ul className="w-48 border border-gray-200 bg-white text-gray-900">
-          {[
-            ["Home", "/"],
-            ["Movies", "/movies"],
-            ["Genres", "/genres"],
-            ["Add a movie", "/admin/movie/0"],
-            ["Manage Catalogue", "/manage-catalogue"],
-            ["GraphQL", "/graphql"],
-          ].map(([title, path], index) => (
-            <li key={index}>
+          {links.map(([title, path]) => (
+            <li key={title}>
               <NavLink
                 to={path}
                 className={({ isActive }) =>

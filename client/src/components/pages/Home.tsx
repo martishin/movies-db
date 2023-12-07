@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { Link } from "react-router-dom"
 
-import ticketLogo from "./../assets/movie_tickets.jpg"
+import ticketLogo from "./../../assets/movie_tickets.jpg"
 
 export default function Home(): ReactNode {
   return (

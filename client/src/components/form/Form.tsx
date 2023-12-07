@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react"
 
-import Input from "./Input.tsx"
+import Input from "./Input"
 
 interface FormProps {
   title: string

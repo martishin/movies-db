@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react"
-import Form from "../components/Form.tsx"
+
+import Form from "../components/form/Form"
 
 describe("Form component", () => {
   test("renders the title passed to it", () => {

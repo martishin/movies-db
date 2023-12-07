@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
-import { Movie as MovieModel } from "../models/Movie"
+import { Movie as MovieModel } from "../../models/Movie"
 
 export default function Movies(): ReactNode {
   const [movies, setMovies] = useState<MovieModel[]>([])
