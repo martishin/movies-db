@@ -1,4 +1,4 @@
-interface OutletContext {
+export default interface OutletContext {
   jwtToken: string
   setJwtToken: (token: string) => void
   setAlertMessage: (message: string) => void

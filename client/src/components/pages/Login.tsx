@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from "react"
 import { useNavigate, useOutletContext } from "react-router-dom"
 
+import OutletContext from "../../state/OutletContext"
 import LoginInput from "../form/LoginInput"
 
 export default function Login(): ReactNode {
@@ -13,7 +14,7 @@ export default function Login(): ReactNode {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (email === "admin@example.com") {
+    if (email === "admin@example.com" && password !== "") {
       setJwtToken("abc")
       setAlertClassName("hidden")
       setAlertMessage("")

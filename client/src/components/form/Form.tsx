@@ -50,7 +50,7 @@ function Form({ title }: FormProps): ReactNode {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (lastName != "") {
+    if (lastName !== "") {
       addPerson(firstName, lastName, dob)
     }
   }
