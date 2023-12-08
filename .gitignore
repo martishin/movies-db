@@ -35,3 +35,6 @@ out/
 
 # Go workspace file
 go.work
+
+# Binary
+server/server
