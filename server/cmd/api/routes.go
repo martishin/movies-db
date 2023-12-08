@@ -15,5 +15,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/", app.home)
 
+	mux.Get("/movies", app.allMovies)
+
 	return mux
 }

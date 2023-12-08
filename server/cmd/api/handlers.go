@@ -1,10 +1,86 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
 	"net/http"
+	"server/internal/models"
+	"time"
+)
+
+const (
+	highlanderID      = 1
+	highlanderRunTime = 116
+	rotla             = 2
+	rotlaRunTime      = 115
 )
 
 func (app *application) home(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintf(w, "Hello, world from %s!", app.Domain)
+	var payload = struct {
+		Status  string `json:"status"`
+		Message string `json:"message"`
+		Version string `json:"version"`
+	}{
+		Status:  "active",
+		Message: "Go Movies up and running",
+		Version: "1.0.0",
+	}
+
+	out, err := json.Marshal(payload)
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(out)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (app *application) allMovies(w http.ResponseWriter, _ *http.Request) {
+	var movies []models.Movie
+
+	rd, _ := time.Parse("2006-01-02", "1986-03-07")
+
+	highlander := models.Movie{
+		ID:          highlanderID,
+		Title:       "Highlander",
+		ReleaseDate: rd,
+		MPAARating:  "R",
+		RunTime:     highlanderRunTime,
+		Description: "A very nice movie",
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+
+	movies = append(movies, highlander)
+
+	rd, _ = time.Parse("2006-01-02", "1981-06-12")
+
+	rotla := models.Movie{
+		ID:          rotla,
+		Title:       "Raiders of the Lost Ark",
+		ReleaseDate: rd,
+		MPAARating:  "PG-13",
+		RunTime:     rotlaRunTime,
+		Description: "Another very nice movie",
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+
+	movies = append(movies, rotla)
+
+	out, err := json.Marshal(movies)
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(out)
+	if err != nil {
+		log.Println(err)
+	}
 }
