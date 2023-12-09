@@ -38,3 +38,5 @@ go.work
 
 # Binary
 server/server
+
+server/postgres-data/

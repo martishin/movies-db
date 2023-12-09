@@ -7,6 +7,7 @@ export default function Movies(): ReactNode {
   const [movies, setMovies] = useState<MovieModel[]>([])
 
   useEffect(() => {
+    console.log("wtf")
     const headers = new Headers()
     headers.append("Content-Type", "application/json")
 
