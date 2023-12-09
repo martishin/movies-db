@@ -7,19 +7,22 @@ export default function Movies(): ReactNode {
   const [movies, setMovies] = useState<MovieModel[]>([])
 
   useEffect(() => {
-    const moviesList = [
-      new MovieModel(1, "Highlander", "1986-03-06", 116, "R", "Some long description"),
-      new MovieModel(
-        2,
-        "Raiders of the Lost Ark",
-        "1981-06-12",
-        115,
-        "PG-13",
-        "Some long description",
-      ),
-    ]
+    const headers = new Headers()
+    headers.append("Content-Type", "application/json")
 
-    setMovies(moviesList)
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    }
+
+    fetch(`api/movies`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        setMovies(data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }, [])
 
   return (
