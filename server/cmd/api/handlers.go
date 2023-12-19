@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -17,35 +15,15 @@ func (app *application) home(w http.ResponseWriter, _ *http.Request) {
 		Version: "1.0.0",
 	}
 
-	out, err := json.Marshal(payload)
-	if err != nil {
-		log.Println(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(out)
-	if err != nil {
-		log.Println(err)
-	}
+	_ = app.writeJSON(w, http.StatusOK, payload)
 }
 
 func (app *application) allMovies(w http.ResponseWriter, _ *http.Request) {
 	movies, err := app.DB.AllMovies()
 	if err != nil {
-		log.Println(err)
+		_ = app.errorJSON(w, err)
 		return
 	}
 
-	out, err := json.Marshal(movies)
-	if err != nil {
-		log.Println(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(out)
-	if err != nil {
-		log.Println(err)
-	}
+	_ = app.writeJSON(w, http.StatusOK, movies)
 }

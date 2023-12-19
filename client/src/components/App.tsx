@@ -10,7 +10,6 @@ export default function App(): ReactNode {
   const [jwtToken, setJwtToken] = useState("")
   const [alertMessage, setAlertMessage] = useState("")
   const [alertClassName, setAlertClassName] = useState("hidden")
-
   useEffect(() => {
     if (alertClassName === "fadeIn") {
       const timer = setTimeout(() => {
