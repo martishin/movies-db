@@ -2,19 +2,22 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
 )
 
-// const (
-// 	maxJSONSizeInBytes = 1024 * 1014 // one megabyte
-// )
+const (
+	maxJSONSizeInBytes = 1024 * 1014 // one megabyte
+)
 
-type JSONResponse struct {
+type jsonResponse struct {
 	Error   bool        `json:"error"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
 }
 
+//nolint:unparam // headers can be used in the future
 func (app *application) writeJSON(w http.ResponseWriter, status int, data interface{}, headers ...http.Header) error {
 	out, err := json.Marshal(data)
 	if err != nil {
@@ -37,26 +40,26 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data interf
 	return nil
 }
 
-// func (app *application) readJSON(w http.ResponseWriter, r *http.Request, data interface{}) error {
-// 	maxBytes := maxJSONSizeInBytes
-// 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
-//
-// 	dec := json.NewDecoder(r.Body)
-//
-// 	dec.DisallowUnknownFields()
-//
-// 	err := dec.Decode(data)
-// 	if err != nil {
-// 		return err
-// 	}
-//
-// 	err = dec.Decode(&struct{}{})
-// 	if errors.Is(err, io.EOF) {
-// 		return errors.New("body must only contain a single JSON value")
-// 	}
-//
-// 	return nil
-// }
+func (app *application) readJSON(w http.ResponseWriter, r *http.Request, data interface{}) error {
+	maxBytes := maxJSONSizeInBytes
+	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
+
+	dec := json.NewDecoder(r.Body)
+
+	dec.DisallowUnknownFields()
+
+	err := dec.Decode(data)
+	if err != nil {
+		return err
+	}
+
+	err = dec.Decode(&struct{}{})
+	if errors.Is(err, io.EOF) {
+		return errors.New("body must only contain a single JSON value")
+	}
+
+	return nil
+}
 
 func (app *application) errorJSON(w http.ResponseWriter, err error, status ...int) error {
 	statusCode := http.StatusBadRequest
@@ -65,7 +68,7 @@ func (app *application) errorJSON(w http.ResponseWriter, err error, status ...in
 		statusCode = status[0]
 	}
 
-	var payload JSONResponse
+	var payload jsonResponse
 	payload.Error = true
 	payload.Message = err.Error()
 

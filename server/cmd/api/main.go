@@ -11,16 +11,23 @@ import (
 )
 
 const (
-	port         = 8080
-	readTimeout  = 5 * time.Second
-	writeTimeout = 10 * time.Second
-	idleTimeout  = 15 * time.Second
+	port          = 8080
+	readTimeout   = 5 * time.Second
+	writeTimeout  = 10 * time.Second
+	idleTimeout   = 15 * time.Second
+	tokenExpiry   = 15 * time.Minute
+	refreshExpiry = 24 * time.Hour
 )
 
 type application struct {
-	DSN    string
-	Domain string
-	DB     repository.DatabaseRepo
+	DSN          string
+	Domain       string
+	DB           repository.DatabaseRepo
+	auth         auth
+	jwtSecret    string
+	jwtIssuer    string
+	jwtAudience  string
+	cookieDomain string
 }
 
 func main() {
@@ -30,6 +37,11 @@ func main() {
 	// read from command line
 	flag.StringVar(&app.DSN, "dsn", "host=localhost port=5432 user=postgres password=postgres dbname=movies "+
 		"sslmode=disable timezone=UTC connect_timeout=5", "Postgres connection string")
+	flag.StringVar(&app.jwtSecret, "jwt-secret", "verysecret", "signing secret")
+	flag.StringVar(&app.jwtIssuer, "jwt-issuer", "example.com", "signing issuer")
+	flag.StringVar(&app.jwtAudience, "jwt-audience", "example.com", "signing audience")
+	flag.StringVar(&app.cookieDomain, "cookie-domain", "localhost", "cookie domain")
+	flag.StringVar(&app.Domain, "domain", "example.com", "domain")
 	flag.Parse()
 
 	// connect to database
@@ -40,8 +52,18 @@ func main() {
 	app.DB = &dbrepo.PostgresDBRepo{DB: conn}
 	defer app.DB.Connection().Close()
 
+	app.auth = auth{
+		issuer:        app.jwtIssuer,
+		audience:      app.jwtAudience,
+		secret:        app.jwtSecret,
+		tokenExpiry:   tokenExpiry,
+		refreshExpiry: refreshExpiry,
+		cookiePath:    "/",
+		cookieName:    "__Host-refresh_token",
+		cookieDomain:  app.cookieDomain,
+	}
+
 	// start web server
-	app.Domain = "example.com"
 	log.Println(app.Domain)
 	log.Println("Starting application on port", port)
 
