@@ -8,7 +8,8 @@ import LoginInput from "../form/LoginInput"
 export default function Login(): ReactNode {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const { setJwtToken, setAlertMessage, setAlertClassName } = useOutletContext() as OutletContext
+  const { setJwtToken, setAlertMessage, setAlertClassName, toggleRefresh } =
+    useOutletContext() as OutletContext
 
   const navigate = useNavigate()
 
@@ -41,6 +42,7 @@ export default function Login(): ReactNode {
           setJwtToken(tokenResponse.access_token)
           setAlertClassName("hidden")
           setAlertMessage("")
+          toggleRefresh(true)
           navigate("/")
         }
       })

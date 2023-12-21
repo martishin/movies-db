@@ -4,9 +4,10 @@ import { Link, useNavigate } from "react-router-dom"
 interface HeaderProps {
   jwtToken: string
   setJwtToken: (token: string) => void
+  toggleRefresh: (refreshEnabled: boolean) => void
 }
 
-export default function Header({ jwtToken, setJwtToken }: HeaderProps): ReactNode {
+export default function Header({ jwtToken, setJwtToken, toggleRefresh }: HeaderProps): ReactNode {
   const navigate = useNavigate()
 
   const logOut = () => {
@@ -21,6 +22,7 @@ export default function Header({ jwtToken, setJwtToken }: HeaderProps): ReactNod
       })
       .finally(() => {
         setJwtToken("")
+        toggleRefresh(false)
       })
     navigate("/")
   }
