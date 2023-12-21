@@ -3,6 +3,9 @@ package main
 import (
 	"errors"
 	"net/http"
+	"strconv"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func (app *application) home(w http.ResponseWriter, _ *http.Request) {
@@ -20,7 +23,7 @@ func (app *application) home(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (app *application) allMovies(w http.ResponseWriter, _ *http.Request) {
-	movies, err := app.DB.AllMovies()
+	movies, err := app.db.AllMovies()
 	if err != nil {
 		_ = app.errorJSON(w, err)
 		return
@@ -43,7 +46,7 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// validate user against database
-	user, err := app.DB.GetUserByEmail(requestPayload.Email)
+	user, err := app.db.GetUserByEmail(requestPayload.Email)
 	if err != nil {
 		_ = app.errorJSON(w, errors.New("invalid credentials"), http.StatusBadRequest)
 		return
@@ -75,4 +78,56 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 
 	// _, _ = w.Write([]byte(tokens.Token))
 	_ = app.writeJSON(w, http.StatusAccepted, tokens)
+}
+
+func (app *application) refreshToken(w http.ResponseWriter, r *http.Request) {
+	for _, cookie := range r.Cookies() {
+		if cookie.Name == app.auth.cookieName {
+			claims := &claims{}
+			refreshToken := cookie.Value
+
+			// parse the token to get the claims
+			_, err := jwt.ParseWithClaims(refreshToken, claims, func(token *jwt.Token) (interface{}, error) {
+				return []byte(app.jwtSecret), nil
+			})
+			if err != nil {
+				_ = app.errorJSON(w, errors.New("unauthorized"), http.StatusUnauthorized)
+				return
+			}
+
+			// get the user id from the token claims
+			userID, err := strconv.Atoi(claims.Subject)
+			if err != nil {
+				_ = app.errorJSON(w, errors.New("unknown user"), http.StatusUnauthorized)
+				return
+			}
+
+			user, err := app.db.GetUserByID(userID)
+			if err != nil {
+				_ = app.errorJSON(w, errors.New("unknown user"), http.StatusUnauthorized)
+				return
+			}
+
+			u := jwtUser{
+				ID:        user.ID,
+				FirstName: user.FirstName,
+				LastName:  user.LastName,
+			}
+
+			tokenPairs, err := app.auth.generateTokenPair(&u)
+			if err != nil {
+				_ = app.errorJSON(w, errors.New("error generating tokens"), http.StatusUnauthorized)
+				return
+			}
+
+			http.SetCookie(w, app.auth.getRefreshCookie(tokenPairs.RefreshToken))
+
+			_ = app.writeJSON(w, http.StatusOK, tokenPairs)
+		}
+	}
+}
+
+func (app *application) logout(w http.ResponseWriter, _ *http.Request) {
+	http.SetCookie(w, app.auth.getExpiredRefreshCookie())
+	w.WriteHeader(http.StatusAccepted)
 }

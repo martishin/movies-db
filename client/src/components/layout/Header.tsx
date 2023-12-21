@@ -10,7 +10,18 @@ export default function Header({ jwtToken, setJwtToken }: HeaderProps): ReactNod
   const navigate = useNavigate()
 
   const logOut = () => {
-    setJwtToken("")
+    const requestOptions: RequestInit = {
+      method: "GET",
+      credentials: "include",
+    }
+
+    fetch("/api/logout", requestOptions)
+      .catch((error) => {
+        console.log("error logging out", error)
+      })
+      .finally(() => {
+        setJwtToken("")
+      })
     navigate("/")
   }
 

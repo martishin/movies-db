@@ -20,9 +20,9 @@ const (
 )
 
 type application struct {
-	DSN          string
-	Domain       string
-	DB           repository.DatabaseRepo
+	dsn          string
+	domain       string
+	db           repository.DatabaseRepo
 	auth         auth
 	jwtSecret    string
 	jwtIssuer    string
@@ -35,13 +35,13 @@ func main() {
 	var app application
 
 	// read from command line
-	flag.StringVar(&app.DSN, "dsn", "host=localhost port=5432 user=postgres password=postgres dbname=movies "+
+	flag.StringVar(&app.dsn, "dsn", "host=localhost port=5432 user=postgres password=postgres dbname=movies "+
 		"sslmode=disable timezone=UTC connect_timeout=5", "Postgres connection string")
 	flag.StringVar(&app.jwtSecret, "jwt-secret", "verysecret", "signing secret")
 	flag.StringVar(&app.jwtIssuer, "jwt-issuer", "example.com", "signing issuer")
 	flag.StringVar(&app.jwtAudience, "jwt-audience", "example.com", "signing audience")
 	flag.StringVar(&app.cookieDomain, "cookie-domain", "localhost", "cookie domain")
-	flag.StringVar(&app.Domain, "domain", "example.com", "domain")
+	flag.StringVar(&app.domain, "domain", "example.com", "domain")
 	flag.Parse()
 
 	// connect to database
@@ -49,8 +49,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	app.DB = &dbrepo.PostgresDBRepo{DB: conn}
-	defer app.DB.Connection().Close()
+	app.db = &dbrepo.PostgresDBRepo{DB: conn}
+	defer app.db.Connection().Close()
 
 	app.auth = auth{
 		issuer:        app.jwtIssuer,
@@ -64,7 +64,7 @@ func main() {
 	}
 
 	// start web server
-	log.Println(app.Domain)
+	log.Println(app.domain)
 	log.Println("Starting application on port", port)
 
 	srv := &http.Server{

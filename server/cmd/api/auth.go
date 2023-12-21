@@ -31,9 +31,9 @@ type tokenPair struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-// type claims struct {
-// 	jwt.RegisteredClaims
-// }
+type claims struct {
+	jwt.RegisteredClaims
+}
 
 func (j *auth) generateTokenPair(user *jwtUser) (tokenPair, error) {
 	// Create a token
@@ -96,16 +96,16 @@ func (j *auth) getRefreshCookie(refreshToken string) *http.Cookie {
 	}
 }
 
-// func (j *auth) getExpiredRefreshCookie() *http.Cookie {
-// 	return &http.Cookie{
-// 		Name:     j.cookieName,
-// 		Path:     j.cookiePath,
-// 		Value:    "",
-// 		Expires:  time.Unix(0, 0),
-// 		MaxAge:   -1,
-// 		SameSite: http.SameSiteStrictMode,
-// 		Domain:   j.cookieDomain,
-// 		HttpOnly: true,
-// 		Secure:   true,
-// 	}
-// }
+func (j *auth) getExpiredRefreshCookie() *http.Cookie {
+	return &http.Cookie{
+		Name:     j.cookieName,
+		Path:     j.cookiePath,
+		Value:    "",
+		Expires:  time.Unix(0, 0),
+		MaxAge:   -1,
+		SameSite: http.SameSiteStrictMode,
+		// Domain:   j.cookieDomain,
+		HttpOnly: true,
+		Secure:   true,
+	}
+}

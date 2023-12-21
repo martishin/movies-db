@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react"
 import { Outlet } from "react-router-dom"
 
+import { TokenResponse } from "../types/TokenResponse"
 import Alert from "./Alert"
 import Header from "./layout/Header"
 import Navigation from "./layout/Navigation"
@@ -21,6 +22,27 @@ export default function App(): ReactNode {
       }
     }
   }, [alertClassName])
+
+  useEffect(() => {
+    if (jwtToken === "") {
+      const requestOptions: RequestInit = {
+        method: "GET",
+        credentials: "include",
+      }
+
+      fetch("/api/refresh", requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          if ("access_token" in data) {
+            const tokenResponse = data as TokenResponse
+            setJwtToken(tokenResponse.access_token)
+          }
+        })
+        .catch((error) => {
+          console.log("user is not logged in", error)
+        })
+    }
+  }, [jwtToken])
 
   return (
     <div className="container mx-auto mt-8 max-w-screen-lg">
