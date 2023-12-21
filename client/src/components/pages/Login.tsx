@@ -2,6 +2,7 @@ import React, { ReactNode, useState } from "react"
 import { useNavigate, useOutletContext } from "react-router-dom"
 
 import OutletContext from "../../state/OutletContext"
+import { TokenResponse } from "../../types/TokenResponse"
 import LoginInput from "../form/LoginInput"
 
 export default function Login(): ReactNode {
@@ -14,15 +15,39 @@ export default function Login(): ReactNode {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (email === "admin@example.com" && password !== "") {
-      setJwtToken("abc")
-      setAlertClassName("hidden")
-      setAlertMessage("")
-      navigate("/")
-    } else {
-      setAlertClassName("fadeIn")
-      setAlertMessage("Invalid credentials")
+    // build the request payload
+    const payload = {
+      email: email,
+      password: password,
     }
+
+    const requestOptions: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    }
+
+    fetch(`/api/authenticate`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        if ("error" in data) {
+          setAlertClassName("fadeIn")
+          setAlertMessage("Invalid credentials")
+        } else {
+          const tokenResponse = data as TokenResponse
+          setJwtToken(tokenResponse.access_token)
+          setAlertClassName("hidden")
+          setAlertMessage("")
+          navigate("/")
+        }
+      })
+      .catch((error) => {
+        setAlertClassName("fadeIn")
+        setAlertMessage(error)
+      })
   }
 
   return (
