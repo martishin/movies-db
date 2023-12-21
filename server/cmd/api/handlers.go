@@ -131,3 +131,13 @@ func (app *application) logout(w http.ResponseWriter, _ *http.Request) {
 	http.SetCookie(w, app.auth.getExpiredRefreshCookie())
 	w.WriteHeader(http.StatusAccepted)
 }
+
+func (app *application) movieCatalog(w http.ResponseWriter, _ *http.Request) {
+	movies, err := app.db.AllMovies()
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	_ = app.writeJSON(w, http.StatusOK, movies)
+}
