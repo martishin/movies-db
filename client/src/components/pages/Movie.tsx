@@ -27,6 +27,7 @@ export default function Movie(): ReactNode {
           data.runtime,
           data.mpaa_rating,
           data.description,
+          data.image,
           data.genres,
         )
         setMovie(movieData)
@@ -37,21 +38,38 @@ export default function Movie(): ReactNode {
       })
   }, [id])
 
-  console.log(movie)
-
   return (
     <div>
       <PageHeader title="Movie" />
       {!isFetchingMovie && (
-        <div className="mt-2 text-left">
-          <h3 className="text-l font-bold tracking-tight"> {movie?.title}</h3>
-          <small>
-            <em>
-              {movie?.release_date}, {movie?.runtime} minutes, Rated {movie?.mpaa_rating}
-            </em>
-          </small>
-          <div className="mt-2">
-            <p>{movie?.description}</p>
+        <div className="mt-2 flex text-left">
+          {movie?.image !== "" && (
+            <div className="mr-4 flex-shrink-0">
+              <img src={`https://image.tmdb.org/t/p/w200/${movie?.image}`} alt="poster" />
+            </div>
+          )}
+          <div>
+            <div>
+              <h3 className="text-l font-bold tracking-tight"> {movie?.title}</h3>
+              <small>
+                <em>
+                  {movie?.release_date}, {movie?.runtime} minutes, Rated {movie?.mpaa_rating}
+                </em>
+              </small>
+            </div>
+            <div className="mt-2">
+              {movie?.genres.map((g) => (
+                <span
+                  key={g.genre}
+                  className="me-2 rounded bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800"
+                >
+                  {g.genre}
+                </span>
+              ))}
+            </div>
+            <div className="mt-2">
+              <p>{movie?.description}</p>
+            </div>
           </div>
         </div>
       )}

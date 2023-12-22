@@ -7,6 +7,7 @@ export default class Movie {
   runtime: number
   mpaa_rating: string
   description: string
+  image: string
   genres: Genre[]
 
   constructor(
@@ -16,6 +17,7 @@ export default class Movie {
     runtime: number,
     mpaa_rating: string,
     description: string,
+    image: string = "",
     genres: Genre[] = [],
   ) {
     this.id = id
@@ -24,6 +26,7 @@ export default class Movie {
     this.runtime = runtime
     this.mpaa_rating = mpaa_rating
     this.description = description
+    this.image = image
     this.genres = genres
   }
 }
