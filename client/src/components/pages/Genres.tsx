@@ -1,12 +1,7 @@
 import { ReactNode } from "react"
 
+import PageHeader from "../layout/PageHeader"
+
 export default function Genres(): ReactNode {
-  return (
-    <>
-      <div className="text-center">
-        <h2 className="text-xl font-bold tracking-tight">Genres</h2>
-        <hr />
-      </div>
-    </>
-  )
+  return <PageHeader title="Genres" />
 }

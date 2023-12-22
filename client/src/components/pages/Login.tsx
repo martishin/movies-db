@@ -4,6 +4,7 @@ import { useNavigate, useOutletContext } from "react-router-dom"
 import OutletContext from "../../state/OutletContext"
 import { TokenResponse } from "../../types/TokenResponse"
 import LoginInput from "../form/LoginInput"
+import PageHeader from "../layout/PageHeader"
 
 export default function Login(): ReactNode {
   const [email, setEmail] = useState("")
@@ -53,38 +54,35 @@ export default function Login(): ReactNode {
   }
 
   return (
-    <>
-      <div className="text-center">
-        <h2 className="text-xl font-bold tracking-tight">Login</h2>
-        <hr />
-        <form className="ml-auto mr-auto mt-3 w-3/5 max-w-xs" onSubmit={handleSubmit}>
-          <LoginInput
-            title="Email Address"
-            type="email"
-            className="form-control"
-            name="email"
-            autoComplete="email-new"
-            onChange={(event) => setEmail(event.target.value)}
-          />
+    <div>
+      <PageHeader title="Login" />
+      <form className="ml-auto mr-auto mt-3 w-3/5 max-w-xs" onSubmit={handleSubmit}>
+        <LoginInput
+          title="Email Address"
+          type="email"
+          className="form-control"
+          name="email"
+          autoComplete="email-new"
+          onChange={(event) => setEmail(event.target.value)}
+        />
 
-          <LoginInput
-            title="Password"
-            type="password"
-            className="form-control"
-            name="password"
-            autoComplete="password-new"
-            onChange={(event) => setPassword(event.target.value)}
-          />
+        <LoginInput
+          title="Password"
+          type="password"
+          className="form-control"
+          name="password"
+          autoComplete="password-new"
+          onChange={(event) => setPassword(event.target.value)}
+        />
 
-          <div className="mt-6">
-            <input
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-800 focus-visible:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              value="Login"
-            />
-          </div>
-        </form>
-      </div>
-    </>
+        <div className="mt-6">
+          <input
+            type="submit"
+            className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-800 focus-visible:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            value="Login"
+          />
+        </div>
+      </form>
+    </div>
   )
 }

@@ -100,9 +100,11 @@ export default function App(): ReactNode {
     <div className="container mx-auto mt-8 max-w-screen-lg">
       <Alert message={alertMessage} alertClassName={alertClassName} />
       <Header jwtToken={jwtToken} setJwtToken={setJwtToken} toggleRefresh={toggleRefresh} />
-      <div className="mt-4 flex flex-wrap">
-        <Navigation jwtToken={jwtToken} />
-        <div className="ml-4 mr-4 flex-grow">
+      <div className="mt-4 flex">
+        <div className="w-48">
+          <Navigation jwtToken={jwtToken} />
+        </div>
+        <div className="ml-4 mr-4 w-min flex-grow">
           <Outlet
             context={{ jwtToken, setJwtToken, setAlertMessage, setAlertClassName, toggleRefresh }}
           />

@@ -22,7 +22,7 @@ export default function Navigation({ jwtToken }: NavigationProps) {
   return (
     <div className="ml-4 mr-4">
       <nav aria-label="Main navigation">
-        <ul className="w-48 border-x border-t border-gray-200 bg-white text-gray-900">
+        <ul className="border-x border-t border-gray-200 bg-white text-gray-900">
           {links.map(([title, path]) => (
             <li key={title}>
               <NavLink

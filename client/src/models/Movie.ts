@@ -1,10 +1,13 @@
-export class Movie {
+import Genre from "./Genre"
+
+export default class Movie {
   id: number
   title: string
   release_date: string
   runtime: number
   mpaa_rating: string
   description: string
+  genres: Genre[]
 
   constructor(
     id: number,
@@ -13,6 +16,7 @@ export class Movie {
     runtime: number,
     mpaa_rating: string,
     description: string,
+    genres: Genre[] = [],
   ) {
     this.id = id
     this.title = title
@@ -20,5 +24,6 @@ export class Movie {
     this.runtime = runtime
     this.mpaa_rating = mpaa_rating
     this.description = description
+    this.genres = genres
   }
 }

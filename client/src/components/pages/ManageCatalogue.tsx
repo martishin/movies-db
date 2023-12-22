@@ -1,13 +1,15 @@
 import { ReactNode, useEffect, useState } from "react"
 import { Link, useNavigate, useOutletContext } from "react-router-dom"
 
-import { Movie as MovieModel } from "../../models/Movie"
+import MovieModel from "../../models/Movie"
 import OutletContext from "../../state/OutletContext"
+import PageHeader from "../layout/PageHeader"
 
 export default function ManageCatalogue(): ReactNode {
   const [movies, setMovies] = useState<MovieModel[]>([])
   const { jwtToken } = useOutletContext() as OutletContext
   const navigate = useNavigate()
+  const [isFetchingMovies, setIsFetchingMovies] = useState(true)
 
   useEffect(() => {
     if (jwtToken === "") {
@@ -24,7 +26,7 @@ export default function ManageCatalogue(): ReactNode {
       headers: headers,
     }
 
-    fetch(`api/admin/movies`, requestOptions)
+    fetch(`/api/admin/movies`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         setMovies(data)
@@ -32,13 +34,13 @@ export default function ManageCatalogue(): ReactNode {
       .catch((err) => {
         console.log(err)
       })
+      .finally(() => setIsFetchingMovies(false))
   }, [jwtToken, navigate])
 
   return (
-    <>
-      <div className="text-center">
-        <h2 className="text-xl font-bold tracking-tight">Manage Catalogue</h2>
-        <hr />
+    <div>
+      <PageHeader title="Manage Catalogue" />
+      {!isFetchingMovies && (
         <div className="relative overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-500 rtl:text-right">
             <thead className="text-xs uppercase text-gray-900">
@@ -72,7 +74,7 @@ export default function ManageCatalogue(): ReactNode {
             </tbody>
           </table>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   )
 }

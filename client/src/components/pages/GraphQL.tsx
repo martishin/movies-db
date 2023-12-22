@@ -1,12 +1,7 @@
 import { ReactNode } from "react"
 
+import PageHeader from "../layout/PageHeader"
+
 export default function GraphQL(): ReactNode {
-  return (
-    <>
-      <div className="text-center">
-        <h2 className="text-xl font-bold tracking-tight">GraphQL</h2>
-        <hr />
-      </div>
-    </>
-  )
+  return <PageHeader title="GraphQL" />
 }

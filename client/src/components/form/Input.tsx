@@ -15,7 +15,10 @@ interface InputProps {
 const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return (
     <div className="mb-3">
-      <label htmlFor={props.name} className="block text-sm font-medium leading-6 text-gray-900">
+      <label
+        htmlFor={props.name}
+        className="block text-center text-sm font-medium leading-6 text-gray-900"
+      >
         {props.title}
       </label>
       <div className="mt-2">

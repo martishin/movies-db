@@ -1,10 +1,12 @@
 import { ReactNode, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
-import { Movie as MovieModel } from "../../models/Movie"
+import MovieModel from "../../models/Movie"
+import PageHeader from "../layout/PageHeader"
 
 export default function Movies(): ReactNode {
   const [movies, setMovies] = useState<MovieModel[]>([])
+  const [isFetchingMovies, setIsFetchingMovies] = useState(true)
 
   useEffect(() => {
     const headers = new Headers()
@@ -15,7 +17,7 @@ export default function Movies(): ReactNode {
       headers: headers,
     }
 
-    fetch(`api/movies`, requestOptions)
+    fetch(`/api/movies`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         setMovies(data)
@@ -23,13 +25,13 @@ export default function Movies(): ReactNode {
       .catch((err) => {
         console.log(err)
       })
+      .finally(() => setIsFetchingMovies(false))
   }, [])
 
   return (
-    <>
-      <div className="text-center">
-        <h2 className="text-xl font-bold tracking-tight">Movies</h2>
-        <hr />
+    <div>
+      <PageHeader title="Movies" />
+      {!isFetchingMovies && (
         <div className="relative overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-500 rtl:text-right">
             <thead className="text-xs uppercase text-gray-900">
@@ -63,7 +65,7 @@ export default function Movies(): ReactNode {
             </tbody>
           </table>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   )
 }
