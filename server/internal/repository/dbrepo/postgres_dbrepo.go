@@ -3,6 +3,7 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"server/internal/models"
 	"time"
 )
@@ -33,13 +34,16 @@ func (m *PostgresDBRepo) AllMovies() ([]*models.Movie, error) {
 			created_at,
 			updated_at
 		FROM
-			movies
+			public.movies
 		ORDER BY
 			title
 	`
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	if err != nil {
+		return nil, err
+	}
+	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 	defer rows.Close()
@@ -65,11 +69,210 @@ func (m *PostgresDBRepo) AllMovies() ([]*models.Movie, error) {
 
 		movies = append(movies, &movie)
 	}
+
+	return movies, nil
+}
+
+func (m *PostgresDBRepo) OneMovie(id int) (*models.Movie, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `
+		SELECT
+			id,
+			title,
+			release_date,
+			runtime,
+			mpaa_rating,
+			description,
+			COALESCE(image, ''),
+			created_at,
+			updated_at
+		FROM
+			public.movies
+		WHERE 
+		    id = $1
+	`
+
+	row := m.DB.QueryRowContext(ctx, query, id)
+	var movie models.Movie
+
+	err := row.Scan(
+		&movie.ID,
+		&movie.Title,
+		&movie.ReleaseDate,
+		&movie.RunTime,
+		&movie.MPAARating,
+		&movie.Description,
+		&movie.Image,
+		&movie.CreatedAt,
+		&movie.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// get genres, if any
+	query = `
+		SELECT
+			g.id,
+			g.genre
+		FROM
+			public.movies_genres mg
+			LEFT JOIN public.genres g ON mg.genre_id = g.id
+		WHERE
+			mg.movie_id = $1
+		ORDER BY
+			g.genre
+    `
+
+	rows, err := m.DB.QueryContext(ctx, query, id)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return movies, nil
+	defer rows.Close()
+
+	var genres []*models.Genre
+	for rows.Next() {
+		var g models.Genre
+		err = rows.Scan(
+			&g.ID,
+			&g.Genre,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		genres = append(genres, &g)
+	}
+
+	movie.Genres = genres
+
+	return &movie, nil
+}
+
+//nolint:funlen // don't want to split for now
+func (m *PostgresDBRepo) OneMovieForEdit(id int) (*models.Movie, []*models.Genre, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `
+		SELECT
+			id,
+			title,
+			release_date,
+			runtime,
+			mpaa_rating,
+			description,
+			COALESCE(image, ''),
+			created_at,
+			updated_at
+		FROM
+			public.movies
+		WHERE 
+		    id = $1
+	`
+
+	row := m.DB.QueryRowContext(ctx, query, id)
+	var movie models.Movie
+
+	err := row.Scan(
+		&movie.ID,
+		&movie.Title,
+		&movie.ReleaseDate,
+		&movie.RunTime,
+		&movie.MPAARating,
+		&movie.Description,
+		&movie.Image,
+		&movie.CreatedAt,
+		&movie.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// get genres, if any
+	query = `
+		SELECT
+			g.id,
+			g.genre
+		FROM
+			public.movies_genres mg
+			LEFT JOIN public.genres g ON mg.genre_id = g.id
+		WHERE
+			mg.movie_id = $1
+		ORDER BY
+			g.genre
+    `
+
+	rows, err := m.DB.QueryContext(ctx, query, id)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, nil, err
+	}
+	if err = rows.Err(); err != nil {
+		return nil, nil, err
+	}
+
+	defer rows.Close()
+
+	var genres []*models.Genre
+
+	var genresArray []int
+	for rows.Next() {
+		var g models.Genre
+		err = rows.Scan(
+			&g.ID,
+			&g.Genre,
+		)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		genres = append(genres, &g)
+		genresArray = append(genresArray, g.ID)
+	}
+
+	movie.Genres = genres
+	movie.GenresArray = genresArray
+
+	var allGenres []*models.Genre
+
+	query = `
+		SELECT 
+		    id, 
+		    genre
+		FROM public.genres
+		ORDER BY genre
+	`
+	rows, err = m.DB.QueryContext(ctx, query)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, nil, err
+	}
+	if err = rows.Err(); err != nil {
+		return nil, nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var g models.Genre
+		err = rows.Scan(
+			&g.ID,
+			&g.Genre,
+		)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		allGenres = append(allGenres, &g)
+	}
+
+	return &movie, allGenres, nil
 }
 
 func (m *PostgresDBRepo) GetUserByEmail(email string) (*models.User, error) {
@@ -86,7 +289,7 @@ func (m *PostgresDBRepo) GetUserByEmail(email string) (*models.User, error) {
 			created_at,
 			updated_at
 		FROM
-			users
+			public.users
 		WHERE
 			email = $1
 	`
@@ -124,11 +327,10 @@ func (m *PostgresDBRepo) GetUserByID(id int) (*models.User, error) {
 			created_at,
 			updated_at
 		FROM
-			users
+			public.users
 		WHERE
 			id = $1
 	`
-
 	var user models.User
 	row := m.DB.QueryRowContext(ctx, query, id)
 
