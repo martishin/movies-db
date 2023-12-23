@@ -57,7 +57,7 @@ export default function Movie(): ReactNode {
                 </em>
               </small>
             </div>
-            <div className="mt-2">
+            <div>
               {movie?.genres.map((g) => (
                 <span
                   key={g.genre}
