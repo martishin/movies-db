@@ -6,6 +6,7 @@ import Genre from "../../models/Genre"
 import Movie from "../../models/Movie"
 import OutletContext from "../../state/OutletContext"
 import GenreResponse from "../../types/GenreResponse"
+import MovieRequest from "../../types/MovieRequest"
 import Checkbox from "../form/Checkbox"
 import Input from "../form/Input"
 import Select from "../form/Select"
@@ -91,7 +92,7 @@ export default function EditMovie(): ReactNode {
     }
   }, [id, jwtToken, navigate])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): boolean => {
     event.preventDefault()
 
     const errors: string[] = []
@@ -124,6 +125,40 @@ export default function EditMovie(): ReactNode {
     if (errors.length > 0) {
       return false
     }
+
+    const headers = new Headers()
+    headers.append("Content-type", "application/json")
+    headers.append("Authorization", `Bearer ${jwtToken}`)
+
+    // addina a new movie
+    const method = movie.id === 0 ? "POST" : "PATCH"
+    // we need to convert the values in JSON for release date (to date)
+    // and for runtime to int
+    const requestBody: MovieRequest = {
+      ...movie,
+      runtime: parseInt(movie.runtime, 10),
+      release_date: new Date(movie.release_date).toISOString(),
+    }
+
+    const requestOptions: RequestInit = {
+      body: JSON.stringify(requestBody),
+      method: method,
+      headers: headers,
+      credentials: "include",
+    }
+
+    fetch(`/api/admin/movies/${movie.id}`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error)
+        } else {
+          navigate("/manage-catalogue")
+        }
+      })
+      .catch((err) => console.log(err))
+
+    return true
   }
 
   const handleChange = (
@@ -165,7 +200,7 @@ export default function EditMovie(): ReactNode {
       <PageHeader title={id === "0" ? "Add Movie" : "Edit Movie"} />
       {/*<pre className="text-left">{JSON.stringify(movie, null, 3)}</pre>*/}
 
-      <form className="ml-auto mr-auto w-2/3 max-w-lg" onSubmit={handleSubmit}>
+      <form className="ml-auto mr-auto w-5/6 max-w-lg" onSubmit={handleSubmit}>
         <input type="hidden" name="id" value={movie.id} id="id" />
 
         <Input
