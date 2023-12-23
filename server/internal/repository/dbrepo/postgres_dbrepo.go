@@ -394,3 +394,83 @@ func (m *PostgresDBRepo) AllGenres() ([]*models.Genre, error) {
 
 	return genres, nil
 }
+
+func (m *PostgresDBRepo) InsertMovie(movie models.Movie) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	stmt := `
+		INSERT
+		INTO
+			public.movies
+			(title, release_date, runtime, mpaa_rating, description, image, created_at,
+			 updated_at)
+		VALUES
+			($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING id
+	`
+
+	var newID int
+	//nolint:execinquery // We need to fetch id
+	err := m.DB.QueryRowContext(ctx, stmt,
+		movie.Title,
+		movie.ReleaseDate,
+		movie.RunTime,
+		movie.MPAARating,
+		movie.Description,
+		movie.Image,
+		movie.CreatedAt,
+		movie.UpdatedAt,
+	).Scan(&newID)
+	if err != nil {
+		return 0, err
+	}
+
+	return newID, nil
+}
+
+func (m *PostgresDBRepo) UpdateMovieGenres(id int, genreIDs []int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	tx, err := m.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	stmt := `
+		DELETE
+		FROM
+			public.movies_genres
+		WHERE
+			movie_id = $1
+	`
+
+	_, err = tx.ExecContext(ctx, stmt, id)
+	if err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+
+	for _, n := range genreIDs {
+		stmt = `
+			INSERT
+			INTO
+				public.movies_genres
+				(movie_id, genre_id)
+			VALUES
+				($1, $2)
+    	`
+		_, err = tx.ExecContext(ctx, stmt, id, n)
+		if err != nil {
+			_ = tx.Rollback()
+			return err
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
