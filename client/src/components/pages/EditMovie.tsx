@@ -6,8 +6,8 @@ import Genre from "../../models/Genre"
 import Movie from "../../models/Movie"
 import OutletContext from "../../state/OutletContext"
 import EditMovieResponse from "../../types/EditMovieResponse"
-import ErrorResponse from "../../types/ErrorResponse"
 import GenreDto from "../../types/GenreDto"
+import JsonResponse from "../../types/JsonResponse"
 import MovieDto from "../../types/MovieDto"
 import Checkbox from "../form/Checkbox"
 import Input from "../form/Input"
@@ -260,9 +260,9 @@ export default function EditMovie(): ReactNode {
         fetch(`/api/admin/movies/${id}`, requestOptions)
           .then((response) => response.json())
           .then((data) => {
-            if ("error" in data) {
-              const errorResponse = data as ErrorResponse
-              console.log(errorResponse.error)
+            const jsonResponse = data as JsonResponse
+            if (jsonResponse.error) {
+              console.log(jsonResponse.error)
             } else {
               navigate("/manage-catalogue")
             }
