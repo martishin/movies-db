@@ -3,6 +3,7 @@ import { Link, useNavigate, useOutletContext } from "react-router-dom"
 
 import MovieModel from "../../models/Movie"
 import OutletContext from "../../state/OutletContext"
+import MovieDto from "../../types/MovieDto"
 import PageHeader from "../layout/PageHeader"
 
 export default function ManageCatalogue(): ReactNode {
@@ -28,8 +29,20 @@ export default function ManageCatalogue(): ReactNode {
 
     fetch(`/api/admin/movies`, requestOptions)
       .then((response) => response.json())
-      .then((data) => {
-        setMovies(data)
+      .then((data: MovieDto[]) => {
+        const movies = data.map((movie) => {
+          return new MovieModel(
+            movie.id,
+            movie.title,
+            new Date(movie.release_date).toISOString().split("T")[0],
+            String(movie.runtime),
+            movie.mpaa_rating,
+            movie.description,
+            movie.image,
+            movie.genres,
+          )
+        })
+        setMovies(movies)
       })
       .catch((err) => {
         console.log(err)
@@ -61,8 +74,8 @@ export default function ManageCatalogue(): ReactNode {
                 <tr key={m.id} className="bg-white">
                   <th scope="row" className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
                     <Link
-                      className="font-medium text-blue-600 hover:underline dark:text-blue-500"
-                      to={`/admin/movies/${m.id}`}
+                      className="font-medium text-blue-700 hover:underline"
+                      to={`/admin/movie/${m.id}`}
                     >
                       {m.title}
                     </Link>

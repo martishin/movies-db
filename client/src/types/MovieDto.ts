@@ -1,6 +1,6 @@
-import Genre from "../models/Genre"
+import GenreDto from "./GenreDto"
 
-export default interface MovieRequest {
+export default interface MovieDto {
   id: number
   title: string
   release_date: string
@@ -8,6 +8,6 @@ export default interface MovieRequest {
   mpaa_rating: string
   description: string
   image: string
-  genres: Genre[]
+  genres: GenreDto[]
   genres_array: number[]
 }

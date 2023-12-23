@@ -1,4 +1,4 @@
-export default interface GenreResponse {
+export default interface GenreDto {
   id: number
   genre: string
   checked: boolean

@@ -23,7 +23,7 @@ export default function Movie(): ReactNode {
         const movieData = new MovieModel(
           data.id,
           data.title,
-          data.release_date,
+          new Date(data.release_date).toISOString().split("T")[0],
           data.runtime,
           data.mpaa_rating,
           data.description,

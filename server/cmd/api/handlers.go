@@ -288,3 +288,52 @@ func (app *application) fetchPoster(movie *models.Movie) {
 		movie.Image = response.Results[0].PosterPath
 	}
 }
+
+func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	movieID, err := strconv.Atoi(id)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	var payload models.Movie
+
+	err = app.readJSON(w, r, &payload)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	movie, err := app.db.OneMovie(movieID)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	movie.Title = payload.Title
+	movie.ReleaseDate = payload.ReleaseDate
+	movie.RunTime = payload.RunTime
+	movie.MPAARating = payload.MPAARating
+	movie.Description = payload.Description
+	movie.UpdatedAt = time.Now()
+
+	err = app.db.UpdateMovie(*movie)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	err = app.db.UpdateMovieGenres(movie.ID, payload.GenresArray)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	resp := jsonResponse{
+		Error:   false,
+		Message: "movie updated",
+	}
+
+	_ = app.writeJSON(w, http.StatusOK, resp)
+}
