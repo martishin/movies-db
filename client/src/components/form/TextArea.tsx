@@ -12,7 +12,7 @@ interface TextAreaProps {
 
 export default function TextArea(props: TextAreaProps) {
   return (
-    <div className="mb-3">
+    <div className="mt-3">
       <label
         htmlFor={props.name}
         className="block text-center text-sm font-medium leading-6 text-gray-900"

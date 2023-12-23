@@ -18,7 +18,7 @@ interface SelectProps {
 
 export default function Select(props: SelectProps) {
   return (
-    <div className="mb-3">
+    <div className="mt-3">
       <label
         htmlFor={props.name}
         className="block text-center text-sm font-medium leading-6 text-gray-900"

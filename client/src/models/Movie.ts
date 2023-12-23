@@ -4,21 +4,23 @@ export default class Movie {
   id: number
   title: string
   release_date: string
-  runtime: number
+  runtime: string
   mpaa_rating: string
   description: string
   image: string
   genres: Genre[]
+  genres_array: number[]
 
   constructor(
     id: number,
     title: string,
     release_date: string,
-    runtime: number,
+    runtime: string,
     mpaa_rating: string,
     description: string,
     image: string = "",
     genres: Genre[] = [],
+    genres_array: number[] = [],
   ) {
     this.id = id
     this.title = title
@@ -28,5 +30,6 @@ export default class Movie {
     this.description = description
     this.image = image
     this.genres = genres
+    this.genres_array = genres_array
   }
 }

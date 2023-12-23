@@ -1,7 +1,11 @@
 import React, { ReactNode, useEffect, useState } from "react"
 import { useNavigate, useOutletContext, useParams } from "react-router-dom"
 
+import Genre from "../../models/Genre"
+import Movie from "../../models/Movie"
 import OutletContext from "../../state/OutletContext"
+import GenreResponse from "../../types/GenreResponse"
+import Checkbox from "../form/Checkbox"
 import Input from "../form/Input"
 import Select from "../form/Select"
 import TextArea from "../form/TextArea"
@@ -27,13 +31,16 @@ export default function EditMovie(): ReactNode {
     return errors.indexOf(key) !== -1
   }
 
-  const [movie, setMovie] = useState({
+  const [movie, setMovie] = useState<Movie>({
     id: 0,
     title: "",
     release_date: "",
     runtime: "",
     mpaa_rating: "",
     description: "",
+    image: "",
+    genres: [],
+    genres_array: [],
   })
 
   // get id from the URL
@@ -44,7 +51,44 @@ export default function EditMovie(): ReactNode {
       navigate("/login")
       return
     }
-  }, [jwtToken, navigate])
+
+    if (id === "0") {
+      // adding a movie
+      setMovie({
+        id: 0,
+        title: "",
+        release_date: "",
+        runtime: "",
+        mpaa_rating: "",
+        description: "",
+        image: "",
+        genres: [],
+        genres_array: [],
+      })
+
+      const headers = new Headers()
+      headers.append("Content-Type", "application/json")
+
+      const requestOptions = {
+        method: "GET",
+        headers: headers,
+      }
+
+      fetch("/api/genres", requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          const genres = data.map((g: GenreResponse) => new Genre(g.id, g.genre, false))
+
+          setMovie((currentMovie) => ({
+            ...currentMovie,
+            genres: genres,
+          }))
+        })
+        .catch((err) => console.log(err))
+    } else {
+      // editing an existing movie
+    }
+  }, [id, jwtToken, navigate])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -61,12 +105,35 @@ export default function EditMovie(): ReactNode {
     })
   }
 
+  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, idx: number) => {
+    const updatedGenres = movie.genres.map((genre, index) => {
+      if (index === idx) {
+        return { ...genre, checked: !genre.checked }
+      }
+      return genre
+    })
+
+    const updatedGenresArray = [...movie.genres_array]
+    const genreId = parseInt(event.target.value, 10)
+    if (event.target.checked) {
+      updatedGenresArray.push(genreId)
+    } else {
+      updatedGenresArray.splice(updatedGenresArray.indexOf(genreId))
+    }
+
+    setMovie({
+      ...movie,
+      genres: updatedGenres,
+      genres_array: updatedGenresArray,
+    })
+  }
+
   return (
-    <div>
+    <div className="mb-3">
       <PageHeader title={id === "0" ? "Add Movie" : "Edit Movie"} />
       <pre className="text-left">{JSON.stringify(movie, null, 3)}</pre>
 
-      <form className="max-w-l ml-auto mr-auto mt-3 w-4/5" onSubmit={handleSubmit}>
+      <form className="max-w-l ml-auto mr-auto w-4/5" onSubmit={handleSubmit}>
         <input type="hidden" name="id" value={movie.id} id="id" />
 
         <Input
@@ -119,6 +186,27 @@ export default function EditMovie(): ReactNode {
           hasError={hasError("description")}
           errorMsg="Please enter a description"
         />
+
+        <div className="mt-3">
+          <h3 className="block text-center text-sm font-medium leading-6 text-gray-900">Genres</h3>
+          <div className="grid gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {movie.genres && movie.genres.length > 1 && (
+              <>
+                {movie.genres.map((g, idx) => (
+                  <Checkbox
+                    title={g.genre}
+                    name="genre"
+                    key={idx}
+                    id={"genre-" + idx}
+                    onChange={(event) => handleCheck(event, idx)}
+                    value={g.id}
+                    checked={g.checked}
+                  />
+                ))}
+              </>
+            )}
+          </div>
+        </div>
       </form>
     </div>
   )
