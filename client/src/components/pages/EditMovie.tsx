@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react"
 import { useNavigate, useOutletContext, useParams } from "react-router-dom"
+import Swal from "sweetalert2"
 
 import Genre from "../../models/Genre"
 import Movie from "../../models/Movie"
@@ -15,7 +16,6 @@ export default function EditMovie(): ReactNode {
   const navigate = useNavigate()
   const { jwtToken } = useOutletContext() as OutletContext
 
-  const [error, setError] = useState(null)
   const [errors, setErrors] = useState<string[]>([])
 
   const mpaaOptions = [
@@ -65,6 +65,7 @@ export default function EditMovie(): ReactNode {
         genres: [],
         genres_array: [],
       })
+      setErrors([])
 
       const headers = new Headers()
       headers.append("Content-Type", "application/json")
@@ -92,6 +93,37 @@ export default function EditMovie(): ReactNode {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    const errors: string[] = []
+    const required = [
+      { field: movie.title, name: "title" },
+      { field: movie.release_date, name: "release_date" },
+      { field: movie.runtime, name: "runtime" },
+      { field: movie.description, name: "description" },
+      { field: movie.mpaa_rating, name: "mpaa_rating" },
+    ]
+
+    required.forEach((obj) => {
+      if (obj.field === "") {
+        errors.push(obj.name)
+      }
+    })
+
+    if (movie.genres_array.length === 0) {
+      Swal.fire({
+        title: "Error!",
+        text: "You must choose at least one genre!",
+        icon: "error",
+        confirmButtonText: "OK",
+      })
+      errors.push("genres")
+    }
+
+    setErrors(errors)
+
+    if (errors.length > 0) {
+      return false
+    }
   }
 
   const handleChange = (
@@ -129,11 +161,11 @@ export default function EditMovie(): ReactNode {
   }
 
   return (
-    <div className="mb-3">
+    <div className="mb-6">
       <PageHeader title={id === "0" ? "Add Movie" : "Edit Movie"} />
-      <pre className="text-left">{JSON.stringify(movie, null, 3)}</pre>
+      {/*<pre className="text-left">{JSON.stringify(movie, null, 3)}</pre>*/}
 
-      <form className="max-w-l ml-auto mr-auto w-4/5" onSubmit={handleSubmit}>
+      <form className="ml-auto mr-auto w-2/3 max-w-lg" onSubmit={handleSubmit}>
         <input type="hidden" name="id" value={movie.id} id="id" />
 
         <Input
@@ -190,7 +222,7 @@ export default function EditMovie(): ReactNode {
         <div className="mt-3">
           <h3 className="block text-center text-sm font-medium leading-6 text-gray-900">Genres</h3>
           <div className="grid gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {movie.genres && movie.genres.length > 1 && (
+            {movie.genres && movie.genres.length > 0 && (
               <>
                 {movie.genres.map((g, idx) => (
                   <Checkbox
@@ -206,6 +238,14 @@ export default function EditMovie(): ReactNode {
               </>
             )}
           </div>
+        </div>
+
+        <div className="mt-6">
+          <input
+            type="submit"
+            className="ml-auto flex w-32 justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-800 focus-visible:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            value="Save"
+          />
         </div>
       </form>
     </div>

@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react"
 
-import Input from "./Input"
+import FormInput from "./FormInput"
 
 interface FormProps {
   title: string
@@ -116,7 +116,7 @@ function Form({ title }: FormProps): ReactNode {
       </ul>
       <form autoComplete="off" onSubmit={handleSubmit}>
         <div className="ml-auto mr-auto mt-6 w-80">
-          <Input
+          <FormInput
             title="First Name"
             type="text"
             name="first-name"
@@ -126,7 +126,7 @@ function Form({ title }: FormProps): ReactNode {
             }
             ref={firstNameRef}
           />
-          <Input
+          <FormInput
             title="Last Name"
             type="text"
             name="last-name"
@@ -137,7 +137,7 @@ function Form({ title }: FormProps): ReactNode {
             ref={lastNameRef}
           />
 
-          <Input
+          <FormInput
             title="Date of Birth"
             type="date"
             name="dob"
