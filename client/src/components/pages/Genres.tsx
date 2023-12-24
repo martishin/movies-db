@@ -31,8 +31,6 @@ export default function Genres(): ReactNode {
       })
   }, [])
 
-  console.log(genres)
-
   return (
     <div>
       <PageHeader title="Genres" />

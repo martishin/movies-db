@@ -54,11 +54,7 @@ export default function ManageCatalogue(): ReactNode {
   return (
     <div>
       <PageHeader title="Manage Catalogue" />
-      {!isFetchingMovies && (
-        <div className="relative overflow-x-auto">
-          <MoviesTable movies={movies} urlTemplate="/admin/movie" />
-        </div>
-      )}
+      {!isFetchingMovies && <MoviesTable movies={movies} urlTemplate="/admin/movie" />}
     </div>
   )
 }

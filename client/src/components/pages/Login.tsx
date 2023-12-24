@@ -60,7 +60,6 @@ export default function Login(): ReactNode {
         <LoginInput
           title="Email Address"
           type="email"
-          className="form-control"
           name="email"
           autoComplete="email-new"
           onChange={(event) => setEmail(event.target.value)}
@@ -69,7 +68,6 @@ export default function Login(): ReactNode {
         <LoginInput
           title="Password"
           type="password"
-          className="form-control"
           name="password"
           autoComplete="password-new"
           onChange={(event) => setPassword(event.target.value)}

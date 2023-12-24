@@ -21,3 +21,7 @@
   animation: fadeOut 0.4s;
   animation-fill-mode: forwards;
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}

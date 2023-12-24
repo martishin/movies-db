@@ -42,11 +42,7 @@ export default function Movies(): ReactNode {
   return (
     <div>
       <PageHeader title="Movies" />
-      {!isFetchingMovies && (
-        <div className="relative overflow-x-auto">
-          <MoviesTable movies={movies} urlTemplate="/movies" />
-        </div>
-      )}
+      {!isFetchingMovies && <MoviesTable movies={movies} urlTemplate="/movies" />}
     </div>
   )
 }

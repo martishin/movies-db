@@ -61,11 +61,7 @@ export default function Genre(): ReactNode {
   return (
     <div>
       <PageHeader title={`Genre: ${genreName}`} />
-      {!isFetchingMovies && (
-        <div className="relative overflow-x-auto">
-          <MoviesTable movies={movies} urlTemplate="/movies" />
-        </div>
-      )}
+      {!isFetchingMovies && <MoviesTable movies={movies} urlTemplate="/movies" />}
     </div>
   )
 }

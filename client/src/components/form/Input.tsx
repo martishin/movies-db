@@ -6,8 +6,8 @@ interface InputProps {
   type: string
   value: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  hasError: boolean
-  errorMsg: string
+  hasError?: boolean
+  errorMsg?: string
   autoComplete?: string
   placeholder?: string
 }
