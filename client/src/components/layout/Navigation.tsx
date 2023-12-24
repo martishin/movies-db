@@ -9,12 +9,12 @@ export default function Navigation({ jwtToken }: NavigationProps) {
     ["Home", "/"],
     ["Movies", "/movies"],
     ["Genres", "/genres"],
+    ["GraphQL", "/graphql"],
   ]
 
   const loggedInLinks = [
     ["Add a movie", "/admin/movie/0"],
     ["Manage Catalogue", "/manage-catalogue"],
-    ["GraphQL", "/graphql"],
   ]
 
   const links = jwtToken !== "" ? [...commonLinks, ...loggedInLinks] : commonLinks
