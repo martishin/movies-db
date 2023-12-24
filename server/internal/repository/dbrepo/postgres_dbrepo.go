@@ -18,28 +18,53 @@ func (m *PostgresDBRepo) Connection() *sql.DB {
 
 const dbTimeout = time.Second * 3
 
-func (m *PostgresDBRepo) AllMovies() ([]*models.Movie, error) {
+func (m *PostgresDBRepo) AllMovies(genre ...int) ([]*models.Movie, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `
-		SELECT
-			id,
-			title,
-			release_date,
-			runtime,
-			mpaa_rating,
-			description,
-			COALESCE(image, ''),
-			created_at,
-			updated_at
-		FROM
-			public.movies
-		ORDER BY
-			title
-	`
+	var rows *sql.Rows
+	var err error
 
-	rows, err := m.DB.QueryContext(ctx, query)
+	if len(genre) > 0 {
+		query := `
+			SELECT
+				id,
+				title,
+				release_date,
+				runtime,
+				mpaa_rating,
+				description,
+				COALESCE(image, ''),
+				created_at,
+				updated_at
+			FROM
+				public.movies
+			WHERE
+				id IN (SELECT movie_id FROM public.movies_genres WHERE genre_id = $1)
+			ORDER BY
+				title
+		`
+		rows, err = m.DB.QueryContext(ctx, query, genre[0])
+	} else {
+		query := `
+			SELECT
+				id,
+				title,
+				release_date,
+				runtime,
+				mpaa_rating,
+				description,
+				COALESCE(image, ''),
+				created_at,
+				updated_at
+			FROM
+				public.movies
+			ORDER BY
+				title
+		`
+		rows, err = m.DB.QueryContext(ctx, query)
+	}
+
 	if err != nil {
 		return nil, err
 	}
