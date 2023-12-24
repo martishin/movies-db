@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import App from "./App"
 import ErrorPage from "./ErrorPage"
 import EditMovie from "./pages/EditMovie"
+import Genre from "./pages/Genre"
 import Genres from "./pages/Genres"
 import GraphQL from "./pages/GraphQL"
 import Home from "./pages/Home"
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { path: "/movies", element: <Movies /> },
       { path: "/movies/:id", element: <Movie /> },
       { path: "/genres", element: <Genres /> },
+      { path: "/genres/:id", element: <Genre /> },
       { path: "/admin/movie/:id", element: <EditMovie /> },
       { path: "/manage-catalogue", element: <ManageCatalogue /> },
       { path: "/graphql", element: <GraphQL /> },

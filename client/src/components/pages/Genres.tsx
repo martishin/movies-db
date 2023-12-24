@@ -41,7 +41,7 @@ export default function Genres(): ReactNode {
           {genres.map((genre: Genre) => (
             <div
               key={genre.id}
-              className="relative flex min-w-0 flex-1 items-start py-3 text-sm leading-6"
+              className="relative flex min-w-0 flex-1 items-start px-6 py-3 text-sm leading-6"
             >
               <Link
                 className="font-medium text-blue-700 hover:underline"

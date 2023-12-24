@@ -1,4 +1,4 @@
 export default interface JsonResponse {
-  error: string
+  error: boolean
   message: string
 }
