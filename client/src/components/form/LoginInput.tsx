@@ -6,6 +6,8 @@ interface LoginInputProps {
   type: string
   autoComplete: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  hasError?: boolean
+  errorMsg?: string
 }
 
 const LoginInput = forwardRef<HTMLInputElement, LoginInputProps>((props, ref) => {
@@ -27,6 +29,7 @@ const LoginInput = forwardRef<HTMLInputElement, LoginInputProps>((props, ref) =>
           ref={ref}
           onChange={props.onChange}
         />
+        {props.hasError && <p className="mt-2 text-sm text-red-600">{props.errorMsg}</p>}
       </div>
     </div>
   )

@@ -93,6 +93,51 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	_ = app.writeJSON(w, http.StatusAccepted, tokens)
 }
 
+func (app *application) signup(w http.ResponseWriter, r *http.Request) {
+	// read json payload
+	var requestPayload struct {
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+	}
+
+	err := app.readJSON(w, r, &requestPayload)
+	if err != nil {
+		_ = app.errorJSON(w, err, http.StatusBadRequest)
+		return
+	}
+
+	// validate user against database
+	userID, err := app.db.InsertUser(
+		requestPayload.FirstName,
+		requestPayload.LastName,
+		requestPayload.Email,
+		requestPayload.Password,
+	)
+	if err != nil {
+		_ = app.errorJSON(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		return
+	}
+
+	u := jwtUser{
+		ID:        userID,
+		FirstName: requestPayload.FirstName,
+		LastName:  requestPayload.LastName,
+	}
+
+	tokens, err := app.auth.generateTokenPair(&u)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	refreshCookie := app.auth.getRefreshCookie(tokens.RefreshToken)
+	http.SetCookie(w, refreshCookie)
+
+	_ = app.writeJSON(w, http.StatusAccepted, tokens)
+}
+
 func (app *application) refreshToken(w http.ResponseWriter, r *http.Request) {
 	for _, cookie := range r.Cookies() {
 		if cookie.Name == app.auth.cookieName {

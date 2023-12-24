@@ -55,17 +55,19 @@ export default function GraphQL(): ReactNode {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
-    if (searchTerm.length > 0) {
-      performSearh(searchTerm)
-    } else {
-      setMovies(fullMoviesList)
-    }
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+
     const value = event.target.value
     setSearchTerm(value)
+
+    if (value.length > 0) {
+      performSearh(value)
+    } else {
+      setMovies(fullMoviesList)
+    }
   }
 
   // useEffect

@@ -16,6 +16,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/", app.home)
 
+	mux.Post("/signup", app.signup)
 	mux.Post("/authenticate", app.authenticate)
 	mux.Get("/refresh", app.refreshToken)
 	mux.Get("/logout", app.logout)

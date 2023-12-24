@@ -261,8 +261,9 @@ ALTER TABLE ONLY public.movies_genres
 ALTER TABLE ONLY public.movies_genres
     ADD CONSTRAINT movies_genres_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES public.movies(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
+ALTER TABLE public.users
+    ADD CONSTRAINT unique_email UNIQUE (email);
 
 --
 -- PostgreSQL database dump complete
 --
-

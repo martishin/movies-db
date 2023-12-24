@@ -6,6 +6,8 @@ import (
 	"errors"
 	"server/internal/models"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type PostgresDBRepo struct {
@@ -373,6 +375,45 @@ func (m *PostgresDBRepo) GetUserByID(id int) (*models.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (m *PostgresDBRepo) InsertUser(
+	firstName string, lastName string, email string, password string,
+) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return 0, err
+	}
+
+	query := `
+        INSERT INTO public.users
+            (first_name, last_name, email, password, created_at, updated_at)
+        VALUES
+            ($1, $2, $3, $4, $5, $6)
+        RETURNING id
+    `
+
+	currentTime := time.Now()
+
+	var newID int
+	//nolint:execinquery // We need to fetch id
+	err = m.DB.QueryRowContext(ctx, query,
+		firstName,
+		lastName,
+		email,
+		string(hashedPassword),
+		currentTime,
+		currentTime,
+	).Scan(&newID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return newID, nil
 }
 
 func (m *PostgresDBRepo) AllGenres() ([]*models.Genre, error) {

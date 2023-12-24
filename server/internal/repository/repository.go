@@ -9,6 +9,7 @@ type DatabaseRepo interface {
 	Connection() *sql.DB
 	GetUserByEmail(email string) (*models.User, error)
 	GetUserByID(id int) (*models.User, error)
+	InsertUser(firstName string, lastName string, email string, password string) (int, error)
 
 	AllMovies(genre ...int) ([]*models.Movie, error)
 	OneMovieForEdit(id int) (*models.Movie, []*models.Genre, error)

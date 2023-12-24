@@ -12,6 +12,7 @@ import Login from "./pages/Login"
 import ManageCatalogue from "./pages/ManageCatalogue"
 import Movie from "./pages/Movie"
 import Movies from "./pages/Movies"
+import SignUp from "./pages/SignUp"
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
       { path: "/manage-catalogue", element: <ManageCatalogue /> },
       { path: "/graphql", element: <GraphQL /> },
       { path: "/login", element: <Login /> },
+      { path: "/sign-up", element: <SignUp /> },
     ],
   },
 ])

@@ -8,7 +8,7 @@ interface SearchProps {
 
 export default function Search({ searchTerm, handleChange, handleSubmit }: SearchProps): ReactNode {
   return (
-    <div className="mt-3 px-6">
+    <div className="mr-auto mt-3 w-2/5 px-6">
       <form onSubmit={handleSubmit} className="relative flex items-center">
         <label htmlFor="search" className="sr-only mb-2 text-sm font-medium text-gray-900">
           Search
@@ -38,11 +38,11 @@ export default function Search({ searchTerm, handleChange, handleSubmit }: Searc
           value={searchTerm}
           onChange={handleChange}
         />
-        <input
-          type="submit"
-          className="absolute right-1 top-1/2 -translate-y-1/2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus-visible:outline-none"
-          value="Search"
-        />
+        {/*<input*/}
+        {/*  type="submit"*/}
+        {/*  className="absolute right-1 top-1/2 -translate-y-1/2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus-visible:outline-none"*/}
+        {/*  value="Search"*/}
+        {/*/>*/}
       </form>
     </div>
   )

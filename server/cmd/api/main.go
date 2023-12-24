@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"server/internal/repository"
 	"server/internal/repository/dbrepo"
 	"time"
@@ -35,9 +36,14 @@ func main() {
 	// set application config
 	var app application
 
+	dbHost := os.Getenv("DB_HOST")
+	if dbHost == "" {
+		dbHost = "localhost"
+	}
+
 	// read from command line
-	flag.StringVar(&app.dsn, "dsn", "host=localhost port=5432 user=postgres password=postgres dbname=movies "+
-		"sslmode=disable timezone=UTC connect_timeout=5", "Postgres connection string")
+	flag.StringVar(&app.dsn, "dsn", fmt.Sprintf("host=%s port=5432 user=postgres password=postgres dbname=movies "+
+		"sslmode=disable timezone=UTC connect_timeout=5", dbHost), "Postgres connection string")
 	flag.StringVar(&app.jwtSecret, "jwt-secret", "verysecret", "signing secret")
 	flag.StringVar(&app.jwtIssuer, "jwt-issuer", "example.com", "signing issuer")
 	flag.StringVar(&app.jwtAudience, "jwt-audience", "example.com", "signing audience")

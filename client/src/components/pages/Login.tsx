@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from "react"
-import { useNavigate, useOutletContext } from "react-router-dom"
+import { Link, useNavigate, useOutletContext } from "react-router-dom"
 
 import OutletContext from "../../state/OutletContext"
 import { TokenResponse } from "../../types/TokenResponse"
@@ -77,9 +77,15 @@ export default function Login(): ReactNode {
           <input
             type="submit"
             className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-800 focus-visible:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-            value="Login"
+            value="Log In"
           />
         </div>
+        <p className="mt-3 text-center text-sm text-gray-500">
+          Not a member?{" "}
+          <Link to="/sign-up" className="font-semibold leading-6 text-blue-700 hover:underline">
+            Sign up
+          </Link>
+        </p>
       </form>
     </div>
   )
