@@ -35,9 +35,7 @@ export default function Movies(): ReactNode {
         })
         setMovies(movies)
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => console.log(err))
       .finally(() => setIsFetchingMovies(false))
   }, [])
 

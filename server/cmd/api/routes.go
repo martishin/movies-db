@@ -26,10 +26,12 @@ func (app *application) routes() http.Handler {
 	mux.Get("/genres", app.allGenres)
 	mux.Get("/movies/genres/{id}", app.allMoviesByGenre)
 
+	mux.Get("/graph", app.moviesGraphQL)
+
 	mux.Route("/admin", func(mux chi.Router) {
 		mux.Use(app.authRequired)
 
-		mux.Get("/movies", app.movieCatalog)
+		mux.Get("/movies", app.allMovies)
 		mux.Get("/movies/{id}", app.movieForEdit)
 		mux.Post("/movies/0", app.insertMovie)
 		mux.Patch("/movies/{id}", app.updateMovie)

@@ -2,7 +2,6 @@ import React, { forwardRef } from "react"
 
 interface LoginInputProps {
   title: string
-  className: string
   name: string
   type: string
   autoComplete: string

@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"server/internal/graph"
 	"server/internal/models"
 	"strconv"
 	"time"
@@ -142,16 +143,6 @@ func (app *application) refreshToken(w http.ResponseWriter, r *http.Request) {
 func (app *application) logout(w http.ResponseWriter, _ *http.Request) {
 	http.SetCookie(w, app.auth.getExpiredRefreshCookie())
 	w.WriteHeader(http.StatusAccepted)
-}
-
-func (app *application) movieCatalog(w http.ResponseWriter, _ *http.Request) {
-	movies, err := app.db.AllMovies()
-	if err != nil {
-		_ = app.errorJSON(w, err)
-		return
-	}
-
-	_ = app.writeJSON(w, http.StatusOK, movies)
 }
 
 func (app *application) getMovie(w http.ResponseWriter, r *http.Request) {
@@ -375,4 +366,32 @@ func (app *application) allMoviesByGenre(w http.ResponseWriter, r *http.Request)
 	}
 
 	_ = app.writeJSON(w, http.StatusOK, movies)
+}
+
+func (app *application) moviesGraphQL(w http.ResponseWriter, r *http.Request) {
+	// we need to populate the Graph type with the movies
+	movies, _ := app.db.AllMovies()
+
+	// get the query from the request
+	q, _ := io.ReadAll(r.Body)
+	query := string(q)
+
+	// create a new variable of type *graph.Graph
+	g := graph.New(movies)
+
+	// set the query string on the variable
+	g.QueryString = query
+
+	// perform the query
+	resp, err := g.Query()
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	// send the response
+	j, _ := json.MarshalIndent(resp, "", "\t")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(j)
 }

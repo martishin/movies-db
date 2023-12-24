@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/golang-jwt/jwt/v5 v5.2.0
+	github.com/graphql-go/graphql v0.8.1
 	github.com/jackc/pgconn v1.14.1
 	github.com/jackc/pgx/v5 v5.5.0
 	golang.org/x/crypto v0.9.0
