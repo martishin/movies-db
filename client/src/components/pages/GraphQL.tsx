@@ -114,14 +114,24 @@ export default function GraphQL(): ReactNode {
   return (
     <div>
       <PageHeader title="GraphQL" />
-      <Search searchTerm={searchTerm} handleChange={handleChange} handleSubmit={handleSubmit} />
-      {movies ? (
-        <MoviesTable movies={movies} urlTemplate="/movies" />
-      ) : (
-        <div className="mt-3 w-full">
-          <p className="text-l ml-auto mr-auto w-fit text-gray-900">No movies (yet)!</p>
-        </div>
-      )}
+      <div>
+        {movies ? (
+          <div>
+            <Search
+              searchTerm={searchTerm}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+            />
+            <div className="mt-2">
+              <MoviesTable movies={movies} urlTemplate="/movies" />
+            </div>
+          </div>
+        ) : (
+          <div className="mt-3 w-full">
+            <p className="text-l ml-auto mr-auto w-fit text-gray-900">No movies (yet)!</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
