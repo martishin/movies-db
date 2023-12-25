@@ -16,27 +16,30 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/", app.home)
 
-	mux.Post("/signup", app.signup)
-	mux.Post("/authenticate", app.authenticate)
-	mux.Get("/refresh", app.refreshToken)
-	mux.Get("/logout", app.logout)
+	mux.Route("/api", func(apiRouter chi.Router) {
+		apiRouter.Post("/graph", app.moviesGraphQL)
 
-	mux.Get("/movies", app.allMovies)
-	mux.Get("/movies/{id}", app.getMovie)
+		apiRouter.Post("/signup", app.signup)
+		apiRouter.Post("/authenticate", app.authenticate)
+		apiRouter.Get("/refresh", app.refreshToken)
+		apiRouter.Get("/logout", app.logout)
 
-	mux.Get("/genres", app.allGenres)
-	mux.Get("/movies/genres/{id}", app.allMoviesByGenre)
+		apiRouter.Get("/movies", app.allMovies)
+		apiRouter.Get("/movies/{id}", app.getMovie)
 
-	mux.Post("/graph", app.moviesGraphQL)
+		apiRouter.Get("/genres", app.allGenres)
+		apiRouter.Get("/movies/genres/{id}", app.allMoviesByGenre)
 
-	mux.Route("/admin", func(mux chi.Router) {
-		mux.Use(app.authRequired)
+		// Sub-router for admin routes
+		apiRouter.Route("/admin", func(adminRouter chi.Router) {
+			adminRouter.Use(app.authRequired)
 
-		mux.Get("/movies", app.allMovies)
-		mux.Get("/movies/{id}", app.movieForEdit)
-		mux.Post("/movies/0", app.insertMovie)
-		mux.Patch("/movies/{id}", app.updateMovie)
-		mux.Delete("/movies/{id}", app.DeleteMovie)
+			adminRouter.Get("/movies", app.allMovies)
+			adminRouter.Get("/movies/{id}", app.movieForEdit)
+			adminRouter.Post("/movies/0", app.insertMovie)
+			adminRouter.Patch("/movies/{id}", app.updateMovie)
+			adminRouter.Delete("/movies/{id}", app.DeleteMovie)
+		})
 	})
 
 	return mux
