@@ -20,8 +20,8 @@ You can explore existing movies ont the [website](https://movies-db.martishin.co
 * UI will be available at https://localhost:5173/
 
 ## ⚙️ Features
-* JWT authentication with periodic token refresh
 * User registration
+* JWT authentication with a periodic token refresh
 * Browsing a list of movies
 * Viewing the information for the individual movie
 * Search movies by genre
