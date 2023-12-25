@@ -39,13 +39,13 @@ export default function Header({ jwtToken, setJwtToken, toggleRefresh }: HeaderP
           {jwtToken === "" ? (
             <Link to="/login">
               <span className="mb-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800">
-                Login
+                Log In
               </span>
             </Link>
           ) : (
             <a href="#!" onClick={logOut}>
               <span className="mb-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-200">
-                Logout
+                Log Out
               </span>
             </a>
           )}

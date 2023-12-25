@@ -13,7 +13,7 @@ export default function Navigation({ jwtToken }: NavigationProps) {
   ]
 
   const loggedInLinks = [
-    ["Add a movie", "/admin/movie/0"],
+    ["Add a Movie", "/admin/movie/0"],
     ["Manage Catalogue", "/manage-catalogue"],
   ]
 

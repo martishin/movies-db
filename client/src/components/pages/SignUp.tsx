@@ -94,7 +94,7 @@ export default function SignUp(): ReactNode {
 
   return (
     <div>
-      <PageHeader title="Login" />
+      <PageHeader title="Sign Up" />
       <form className="ml-auto mr-auto mt-3 w-3/5 max-w-xs" onSubmit={handleSubmit}>
         <LoginInput
           title="First Name"
