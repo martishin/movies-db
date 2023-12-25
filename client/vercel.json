@@ -1,6 +1,10 @@
 {
   "rewrites":  [
     {
+      "source": "/api/:path*",
+      "destination": "https://movies-db-api.martishin.com/api/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/"
     }
