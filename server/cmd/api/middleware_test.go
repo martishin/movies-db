@@ -7,8 +7,9 @@ import (
 	"time"
 )
 
-func testHandler(w http.ResponseWriter, r *http.Request) {}
+func testHandler(_ http.ResponseWriter, _ *http.Request) {}
 
+//nolint:gochecknoglobals // Okay in test
 var testAuth = auth{
 	issuer:        "testIssuer",
 	audience:      "testAudience",
@@ -70,7 +71,10 @@ func TestEnableCORSWithOPTIONSMethod(t *testing.T) {
 	expectedMethods := "GET,POST,PUT,PATCH,DELETE,OPTIONS"
 
 	if headers.Get("Access-Control-Allow-Methods") != expectedMethods {
-		t.Errorf("Expected Access-Control-Allow-Methods to be %s, got %s", expectedMethods, headers.Get("Access-Control-Allow-Methods"))
+		t.Errorf(
+			"Expected Access-Control-Allow-Methods to be %s, got %s", expectedMethods,
+			headers.Get("Access-Control-Allow-Methods"),
+		)
 	}
 }
 
