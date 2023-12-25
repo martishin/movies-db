@@ -4,8 +4,6 @@ import mkcert from "vite-plugin-mkcert"
 
 const apiUrl = process.env.API_URL
 
-console.log(apiUrl)
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), mkcert()],
