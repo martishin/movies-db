@@ -23,9 +23,9 @@ You can explore existing movies ont the [website](https://movies-db.martishin.co
 * User registration
 * JWT authentication with a periodic token refresh
 * Browsing a list of movies
-* Viewing the information for the individual movie
-* Search movies by genre
+* Viewing information for an individual movie
+* Searching movies by genre
 * Adding new movies
 * Updating existing movies
 * Deleting movies from the database
-* Search movies by name using GraphQL API
+* Searching movies by title using GraphQL API
