@@ -12,7 +12,7 @@ You can explore existing movies ont the [website](https://movies-db.martishin.co
 * Navigate to server folder: `cd server`
 * Build the server with: `make build`
 * Start a PostgreSQL database and the server: `make run`
-* API will be available at https://localhost:8080/
+* API will be available at http://localhost:8080/
 ### Client
 * Navigate to client folder: `cd client`
 * Install dependencies `npm install`
