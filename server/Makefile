@@ -10,5 +10,8 @@ run:
 stop:
 	docker-compose stop
 
+remove:
+	docker-compose down
+
 logs:
 	docker-compose logs -f
