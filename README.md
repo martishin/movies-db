@@ -26,6 +26,7 @@ You can explore existing movies ont the [website](https://movies-db.martishin.co
 * Viewing information for an individual movie
 * Searching movies by genre
 * Adding new movies
+* Fetching the movie's poster image from TMDB
 * Updating existing movies
 * Deleting movies from the database
 * Searching movies by title using GraphQL API
