@@ -1,6 +1,6 @@
 # MoviesDB
 Website with information about movies, using *React.js* on the frontend and *Go* on the backend.   
-You can explore existing movies ont the [website](https://movies-db.martishin.com/) and even register and add a new movie to the Database 😃
+You can explore existing movies on the [website](https://movies-db.martishin.com/) and even register and add a new movie to the Database 😃
 
 <div>
   <img src="https://github.com/tty-monkey/movies-db/blob/main/screenshot-2.png" width="350" style="display: inline-block; margin-right: 10px;"/>
