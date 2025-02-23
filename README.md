@@ -4,7 +4,7 @@ You can explore existing movies on the [website](https://movies-db.martishin.com
 
 <div>
   <img src="https://github.com/tty-monkey/movies-db/blob/main/screenshot-2.png" width="350" style="display: inline-block; margin-right: 10px;"/>
-  <img src="https://github.com/tty-monkey/movies-db/blob/main/screenshot-1.png" width="342" style="display: inline-block;"/>
+  <img src="https://github.com/tty-monkey/movies-db/blob/main/screenshot-1.png" width="350" style="display: inline-block;"/>
 </div>
 
 ## 🚀 Running Locally
